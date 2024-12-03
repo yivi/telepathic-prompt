@@ -6,23 +6,24 @@
     </button>
     <div v-if="revealedCards.length > 0">
       <div v-for="(card, index) in revealedCards" :key="index">
-        {{ index === 0 ? 'Current Card: ' : 'Previous Card: ' }}{{ card }}
+        {{ card.textLess + '  <--->  ' + card.textMore }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
+import {Card} from "../models/Card.ts";
 
 // Define props to receive the deck array
 const props = defineProps<{
-  deck: string[]
+  deck: Card[]
 }>();
 
 // Local state to manage the deck and revealed cards
-const currentDeck = ref([...props.deck]);
-const revealedCards = ref<string[]>([]);
+const currentDeck = ref<Card[]>([...props.deck]);
+const revealedCards = ref<Card[]>([]);
 
 // Method to shuffle and reset the deck
 const shuffleDeck = () => {
