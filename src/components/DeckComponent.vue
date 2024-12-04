@@ -3,19 +3,30 @@
 
     <div class="ui">
       <div class="buttons-container">
-        <button @click="shuffleDeck">Shuffle Deck</button>
-        <button @click="revealCard" :disabled="currentDeck.length === 0">
-          {{ currentDeck.length === 0 ? 'No more cards' : 'Reveal Card' }}
+        <button @click="shuffleDeck">Barajar</button>
+        <button @click="revealHand">
+          {{ currentDeck.length < handSize ? 'Barajar y revelar' : 'Revelar mano' }}
         </button>
+        <select v-model="handSize">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+
+        <span class="deck-info" :class="{tooFew: currentDeck.length < handSize}">Cartas mazo: {{ currentDeck.length }}.</span>
       </div>
 
-      <div class="cards-container">
-        <div v-for="(card, index) in revealedCards" :key="index" class="card-container">
-          <div class="card-half card-left">{{ card.textLess }}</div>
-          <div class="card-half card-right">{{ card.textMore }}</div>
+      <template v-if="currentHand">
+        <div class="hand-container">
+          <div v-for="card in currentHand.cards" class="card-container">
+            <div class="card-half card-left">{{ card.textLess }}</div>
+            <div class="card-half card-right">{{ card.textMore }}</div>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
+
+    <div></div>
 
   </section>
 </template>
@@ -23,6 +34,7 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {Card} from '../models/Card.ts';
+import {Hand} from "../models/Hand.ts";
 
 // Define props to receive the deck array
 const props = defineProps<{
@@ -31,23 +43,40 @@ const props = defineProps<{
 
 // Local state to manage the deck and revealed cards
 const currentDeck = ref<Card[]>([...props.deck]);
-const revealedCards = ref<Card[]>([]);
+const playedHands = ref<Hand[]>([])
+const currentHand = ref<Hand>();
+const handSize = ref<number>(1);
 
 // Method to shuffle and reset the deck
 const shuffleDeck = () => {
   currentDeck.value = [...props.deck]; // Reset the deck to its original state
   currentDeck.value.sort(() => Math.random() - 0.5);
-  revealedCards.value = []; // Clear revealed cards
+  playedHands.value = []; // Clear revealed cards
 };
 
 // Method to reveal the next card
-const revealCard = () => {
-  if (currentDeck.value.length > 0) {
+const revealHand = () => {
+  // if there are enough cards on the deck
+
+  if (currentDeck.value.length < handSize.value) {
+    shuffleDeck();
+    console.log('shuffling');
+  }
+
+  let cards : Card[] = [];
+
+  for (let i = 0; i < handSize.value; i++) {
     const nextCard = currentDeck.value.shift();
     if (nextCard) {
-      revealedCards.value.unshift(nextCard); // Add to the top of the list
+      cards.push(nextCard);
     }
   }
+
+  currentHand.value = {
+    cards: cards,
+    size: handSize.value,
+  }
+
 };
 </script>
 
@@ -55,27 +84,22 @@ const revealCard = () => {
 .app-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
-  overflow: hidden;
 }
 
 .ui {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  align-items: center;
-  /* Center buttons vertically */
+  width: 100%;
 }
 
-.cards-container {
-  overflow-y: auto;
-  margin-top: 20px;
+.hand-container {
+  margin-top: 10px;
   display: flex;
-  flex-direction: column-reverse; /* Makes new cards appear from top */
-  align-items: start;
-  position: absolute;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  padding: 16px;
 }
 
 button {
@@ -86,9 +110,11 @@ button {
   display: flex;
   border-radius: 8px;
   overflow: hidden;
-  width: 300px;
-  margin: 16px 0;
+  width: 310px;
+  margin: 8px 0;
   border: 1px solid #ddd;
+  font-size: 0.9em;
+  font-weight: bold;
 }
 
 .card-half {
@@ -96,7 +122,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 32px;
   color: darkblue;
 }
 
@@ -106,5 +132,15 @@ button {
 
 .card-right {
   background-color: #f2dede; /* light pink background */
+}
+
+.deck-info {
+  margin-left: 10px;
+  font-size: 0.8em;
+  font-style: italic;
+}
+
+.deck-info.tooFew {
+  color: red;
 }
 </style>
