@@ -1,6 +1,6 @@
 export interface Card {
-  number: number;
-  textLess: string;
-  textMore: string;
-  source: string;
+  id: number;
+  textLeft: string;
+  textRight: string;
+  set: string;
 }

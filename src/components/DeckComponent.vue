@@ -19,8 +19,8 @@
       <template v-if="currentHand">
         <div class="hand-container">
           <div v-for="card in currentHand.cards" class="card-container">
-            <div class="card-half card-left">{{ card.textLess }}</div>
-            <div class="card-half card-right">{{ card.textMore }}</div>
+            <div class="card-half card-left">{{ card.textLeft }}</div>
+            <div class="card-half card-right">{{ card.textRight }}</div>
           </div>
         </div>
       </template>
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {Card} from '../models/Card.ts';
 import {Hand} from "../models/Hand.ts";
 
@@ -43,24 +43,26 @@ const props = defineProps<{
 
 // Local state to manage the deck and revealed cards
 const currentDeck = ref<Card[]>([...props.deck]);
-const playedHands = ref<Hand[]>([])
 const currentHand = ref<Hand>();
 const handSize = ref<number>(1);
+
+onMounted( () => {
+  shuffleDeck()
+})
 
 // Method to shuffle and reset the deck
 const shuffleDeck = () => {
   currentDeck.value = [...props.deck]; // Reset the deck to its original state
   currentDeck.value.sort(() => Math.random() - 0.5);
-  playedHands.value = []; // Clear revealed cards
+  currentHand.value = undefined;
 };
 
 // Method to reveal the next card
 const revealHand = () => {
-  // if there are enough cards on the deck
 
+  // if there are enough cards on the deck
   if (currentDeck.value.length < handSize.value) {
     shuffleDeck();
-    console.log('shuffling');
   }
 
   let cards : Card[] = [];
