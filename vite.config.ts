@@ -1,7 +1,43 @@
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
+import {VitePWA} from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+    plugins: [
+        vue(),
+        VitePWA({
+                registerType: 'autoUpdate',
+                manifest: {
+                    name: "Telepathic Prompter",
+                    short_name: "telepathic-prompt",
+                    description: "Check your telepathic abilities with this simple tool.",
+                    theme_color: "#aabdce",
+                    icons: [
+                        {
+                            src: "pwa-64x64.png",
+                            sizes: "64x64",
+                            type: "image/png"
+                        },
+                        {
+                            src: "pwa-192x192.png",
+                            sizes: "192x192",
+                            type: "image/png"
+                        },
+                        {
+                            src: "pwa-512x512.png",
+                            sizes: "512x512",
+                            type: "image/png"
+                        },
+                        {
+                            src: "maskable-icon-512x512.png",
+                            sizes: "512x512",
+                            type: "image/png",
+                            purpose: "maskable"
+                        }
+                    ]
+                }
+            }
+        ),
+    ],
 });
