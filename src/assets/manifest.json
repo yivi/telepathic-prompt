@@ -1,9 +1,10 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "short_name": "telepathic",
   "name": "Telepathic Prompter",
   "icons": [
     {
-      "src": "/telepathic.svg",
+      "src": "./telepathic.svg",
       "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
       "type": "image/svg+xml",
       "purpose": "any"
@@ -11,6 +12,6 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#aabdce",
+  "background_color": "#aabdce"
 }

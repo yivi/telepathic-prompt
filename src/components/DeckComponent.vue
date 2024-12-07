@@ -44,7 +44,7 @@ const props = defineProps<{
 // Local state to manage the deck and revealed cards
 const currentDeck = ref<Card[]>([...props.deck]);
 const currentHand = ref<Hand>();
-const handSize = ref<number>(1);
+const handSize = ref<number>(2);
 
 onMounted( () => {
   shuffleDeck()
@@ -100,7 +100,6 @@ const revealHand = () => {
   justify-content: center;
   gap: 16px;
   border-radius: 8px;
-  background-color: #f5f5f5;
   padding: 16px;
 }
 
