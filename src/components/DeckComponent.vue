@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, TransitionGroup} from 'vue';
+import {onMounted, ref} from 'vue';
 import {Card} from '../models/Card.ts';
 import {Hand} from "../models/Hand.ts";
 
