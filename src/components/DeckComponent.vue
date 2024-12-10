@@ -107,6 +107,10 @@ const revealHand = () => {
   padding: 16px;
 }
 
+.buttons-container {
+  margin-top: 15px;
+}
+
 button {
   margin: 5px;
 }
